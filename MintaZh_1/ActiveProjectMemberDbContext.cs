@@ -27,7 +27,8 @@ namespace MintaZh_1
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<ActiveProjectMember>()
+                .HasKey(x => x.Name);
         }
     }
 }
