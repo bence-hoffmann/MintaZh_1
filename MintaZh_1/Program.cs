@@ -73,7 +73,7 @@ namespace MintaZh_1
             //-Hányan értenek a Javahoz? 
 
             var q2 = from worker in workers
-                     where worker.Stacks.Count(x => x.Equals("Java", StringComparison.InvariantCultureIgnoreCase)) > 0
+                     where worker.Stacks.Any(x => x.Equals("Java", StringComparison.InvariantCultureIgnoreCase))
                      select worker;
 
             new List<int> { q2.Count() }.QuestionWriter("Q2, Hányan értenek a Javahoz?");
