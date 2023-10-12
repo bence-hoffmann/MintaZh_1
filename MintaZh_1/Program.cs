@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -124,11 +125,12 @@ namespace MintaZh_1
 
         private static void UploadToDb(List<ActiveProjectMember> list)
         {
-            var dbContext = new ActiveProjectMemberDbContext();
+            using (DbContext dbContext = new ActiveProjectMemberDbContext())
+            {
+                list.ForEach(x => dbContext.Add(x));
 
-            list.ForEach(x => dbContext.Add(x));
-
-            dbContext.SaveChanges();
+                dbContext.SaveChanges();
+            }
         }
     }
 }
