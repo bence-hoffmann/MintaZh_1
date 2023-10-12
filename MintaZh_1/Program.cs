@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace MintaZh_1
 {
@@ -40,7 +41,7 @@ namespace MintaZh_1
             Console.WriteLine("\n\n");
         }
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var workers = Worker.Import();
             workers.QuestionWriter("Xml read");
@@ -48,14 +49,14 @@ namespace MintaZh_1
             var fileteredWorkers = WorkerFilter.Filter(workers);
             fileteredWorkers.QuestionWriter("Attribute & Filter workers.");
 
-            LinqQueries(workers);
+            await LinqQueriesAsync(workers);
         }
 
         /// <summary>
         /// Linq queries.
         /// </summary>
         /// <param name="workers">List of workers.</param>
-        private static void LinqQueries(List<Worker> workers)
+        private static async Task LinqQueriesAsync(List<Worker> workers)
         {
             //-Mennyi a Juniorok össz fizetése?
             var q1 = from worker in workers
@@ -120,16 +121,20 @@ namespace MintaZh_1
 
             q6.QuestionWriter("Q6, Válasszuk ki azokat a .Net fejleszőket akik vagy medior vagy senior szinten vannak.");
 
-            UploadToDb(q6.ToList());
+            await UploadToDbAsync(q6.ToList());
         }
 
-        private static void UploadToDb(List<ActiveProjectMember> list)
+        /// <summary>
+        /// Add <see cref="ActiveProjectMember"/> <see cref="List{T}"/> to sql server, save then close connection asyncronusly;
+        /// </summary>
+        /// <param name="list">To beadded <see cref="ActiveProjectMember"/> <see cref="List{T}"/></param>
+        private static async Task<int> UploadToDbAsync(List<ActiveProjectMember> list)
         {
             using (DbContext dbContext = new ActiveProjectMemberDbContext())
             {
-                list.ForEach(x => dbContext.Add(x));
+                await dbContext.AddRangeAsync(list);
 
-                dbContext.SaveChanges();
+                return await dbContext.SaveChangesAsync();
             }
         }
     }
