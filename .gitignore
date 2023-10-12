@@ -361,3 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/MintaZh_1/ActiveProjectMember.mdf
+/MintaZh_1/ActiveProjectMember_log.ldf
