@@ -132,6 +132,8 @@ namespace MintaZh_1
         {
             using (DbContext dbContext = new ActiveProjectMemberDbContext())
             {
+                dbContext.RemoveRange(list);
+
                 await dbContext.AddRangeAsync(list);
 
                 return await dbContext.SaveChangesAsync();
