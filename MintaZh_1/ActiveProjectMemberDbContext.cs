@@ -4,6 +4,9 @@ namespace MintaZh_1
 {
     public class ActiveProjectMemberDbContext : DbContext
     {
+        /// <summary>
+        /// <see cref="ActiveProjectMember"/> data.
+        /// </summary>
         public DbSet<ActiveProjectMember> Members { get; set; }
 
         public ActiveProjectMemberDbContext()
