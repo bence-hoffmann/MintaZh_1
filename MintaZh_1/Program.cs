@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MintaZh_1
 {
@@ -26,17 +26,31 @@ namespace MintaZh_1
         /// <param name="anwsers">The answer to the quesrtion.</param>
         private static void QuestionWriter<T>(this IEnumerable<T> anwsers, string questionName)
         {
-            Console.WriteLine($"----------------------------------Question: {questionName}------------------------------------------");
-            Console.WriteLine("**************************");
+            var title = $"Question: {questionName}";
+            var isEven = (Console.WindowWidth - title.Length) % 2 == 0 ;
+            // "/2*2" is there to ensure the remaining is even. 
+            var consoleSpace = (Console.WindowWidth - title.Length) / 2 * 2;
+            var dashBuilder = new StringBuilder();
+            const string stars = "**************************";
+
+            for (int i = 0; i < consoleSpace / 2; i++)
+            {
+                dashBuilder.Append('-');
+            }
+
+            var header = dashBuilder.ToString() + title + dashBuilder.ToString();
+
+            Console.WriteLine(header + (isEven ? "" : "-"));
+            Console.WriteLine(stars);
 
             foreach (var item in anwsers)
             {
                 Console.WriteLine(item);
-                Console.WriteLine("**************************");
+                Console.WriteLine(stars);
             }
 
-            Console.Write("------------------------------------------------------------------------------------");
-            for (int i = 0; i < (questionName.Length); i++) Console.Write('-');
+            for (int i = 0; i < (header.Length); i++) Console.Write('-');
+            if(!isEven) Console.Write("-");
             Console.WriteLine("\n\n");
         }
 
@@ -125,12 +139,14 @@ namespace MintaZh_1
 
         private static void UploadToDb(List<ActiveProjectMember> list)
         {
-            using (DbContext dbContext = new ActiveProjectMemberDbContext())
-            {
-                list.ForEach(x => dbContext.Add(x));
+            using ActiveProjectMemberDbContext dbContext = new ActiveProjectMemberDbContext();
+            list.ForEach(x => dbContext.Add(x));
+            dbContext.SaveChanges();
 
-                dbContext.SaveChanges();
-            }
+            var dbData = from data in dbContext.Members
+                         select data;
+
+            dbData.QuestionWriter("Database data is the following");
         }
     }
 }
