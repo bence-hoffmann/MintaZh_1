@@ -10,6 +10,10 @@ namespace MintaZh_1
         /// </summary>
         public readonly int Value;
 
+        /// <summary>
+        /// Sets the minimum acceptable value for child property.
+        /// </summary>
+        /// <param name="value">The minimum value.</param>
         public MinimumChildAttribute(int value)
         {
             Value = value;

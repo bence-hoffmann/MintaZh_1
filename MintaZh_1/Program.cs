@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ namespace MintaZh_1
 {
     internal static class Program
     {
-
+#error Optional
         /// <summary>
         /// Pretty console writer for <see cref="IQueryable{T}"/> implementations.
         /// </summary>
@@ -19,6 +20,7 @@ namespace MintaZh_1
             anwsers.ToList().QuestionWriter(questionName);
         }
 
+#error Optional
         /// <summary>
         /// Pretty console writer for <see cref="IEnumerable{T}"/> implementations.
         /// </summary>
@@ -134,17 +136,26 @@ namespace MintaZh_1
 
             q6.QuestionWriter("Q6, Válasszuk ki azokat a .Net fejleszőket akik vagy medior vagy senior szinten vannak.");
 
-            UploadToDb(q6.ToList());
+            UploadToDb(q6);
         }
 
-        private static void UploadToDb(List<ActiveProjectMember> list)
+        /// <summary>
+        /// Adds <see cref="ActiveProjectMember"/> data to database.
+        /// </summary>
+        /// <param name="data">IEnumerable <see cref="ActiveProjectMember"/>.</param>
+        private static void UploadToDb(IEnumerable<ActiveProjectMember> data)
         {
-            using ActiveProjectMemberDbContext dbContext = new ActiveProjectMemberDbContext();
-            list.ForEach(x => dbContext.Add(x));
+            using var dbContext = new ActiveProjectMemberDbContext();
+
+            //For testing purposes, we make sure, to remove the already existing data.
+            dbContext.Members.ToList().ForEach(x => dbContext.Members.Remove(x));
+
+            dbContext.Members.AddRange(data);
+
             dbContext.SaveChanges();
 
-            var dbData = from data in dbContext.Members
-                         select data;
+            var dbData = from members in dbContext.Members
+                         select members;
 
             dbData.QuestionWriter("Database data is the following");
         }
