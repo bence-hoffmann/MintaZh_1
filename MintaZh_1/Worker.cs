@@ -101,7 +101,7 @@ namespace MintaZh_1
             }
             catch (Exception ex)
             {
-                throw new InvalidXmlException(workerRaw.ToString(), ex);
+                throw new FormatException(workerRaw.ToString(), ex);
             }
 
             return worker;
@@ -118,44 +118,6 @@ namespace MintaZh_1
             if(stacks is null) throw new ArgumentNullException(nameof(stacks));
 
             return stacks.Select(x => x.Value).ToList();
-        }
-
-#error Optional
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-            
-            sb.Append("Name: ");
-            sb.AppendLine(Name);
-
-            sb.Append("Position: ");
-            sb.AppendLine(Position);
-
-            sb.Append("Salary: ");
-            sb.AppendLine(Salary.ToString());
-
-            sb.Append("Active: ");
-            sb.AppendLine(Active ? "yes" : "no");
-
-            sb.Append("Number of holidays: ");
-            sb.AppendLine(NumberOfHolidays.ToString());
-
-            sb.Append("Children: ");
-            sb.AppendLine(Children.ToString());
-
-            sb.AppendLine("Stacks: \n\t[");
-            Stacks.ForEach(stack =>
-            {
-                sb.Append("\t\t");
-                sb.Append(stack);
-                sb.AppendLine(",");
-            });
-
-            sb.Remove(sb.Length-2, 2);
-            sb.AppendLine();
-            sb.Append("\t]");
-
-            return sb.ToString();
         }
 
         public override bool Equals(object obj)

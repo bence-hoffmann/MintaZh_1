@@ -12,7 +12,6 @@ namespace MintaZh_1
         public int Salary { get; set; }
         public string Position { get; set; }
 
-#error Optional
         public override string ToString()
         {
             var sb = new StringBuilder();

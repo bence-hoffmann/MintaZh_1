@@ -1,26 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace MintaZh_1
 {
     internal static class Program
     {
-#error Optional
-        /// <summary>
-        /// Pretty console writer for <see cref="IQueryable{T}"/> implementations.
-        /// </summary>
-        /// <typeparam name="T">Any object.</typeparam>
-        /// <param name="anwsers">The answer to the quesrtion.</param>
-        /// <param name="questionName">The name of the question.</param>
-        private static void QuestionWriter<T>(this IQueryable<T> anwsers, string questionName)
-        {
-            anwsers.ToList().QuestionWriter(questionName);
-        }
 
-#error Optional
         /// <summary>
         /// Pretty console writer for <see cref="IEnumerable{T}"/> implementations.
         /// </summary>
@@ -28,42 +14,18 @@ namespace MintaZh_1
         /// <param name="anwsers">The answer to the quesrtion.</param>
         private static void QuestionWriter<T>(this IEnumerable<T> anwsers, string questionName)
         {
-            var title = $"Question: {questionName}";
-            var isEven = (Console.WindowWidth - title.Length) % 2 == 0 ;
-            // "/2*2" is there to ensure the remaining is even. 
-            var consoleSpace = (Console.WindowWidth - title.Length) / 2 * 2;
-            var dashBuilder = new StringBuilder();
-            const string stars = "**************************";
-
-            for (int i = 0; i < consoleSpace / 2; i++)
-            {
-                dashBuilder.Append('-');
-            }
-
-            var header = dashBuilder.ToString() + title + dashBuilder.ToString();
-
-            Console.WriteLine(header + (isEven ? "" : "-"));
-            Console.WriteLine(stars);
-
-            foreach (var item in anwsers)
-            {
-                Console.WriteLine(item);
-                Console.WriteLine(stars);
-            }
-
-            for (int i = 0; i < (header.Length); i++) Console.Write('-');
-            if(!isEven) Console.Write("-");
-            Console.WriteLine("\n\n");
+            Console.WriteLine();
+            Console.WriteLine($"Question: {questionName}");
+            Console.WriteLine();
+            anwsers
+                .ToList()
+                .ForEach(x => Console.WriteLine(x));
+            Console.WriteLine();
         }
 
-        static void Main(string[] args)
+        static void Main()
         {
             var workers = Worker.Import();
-            workers.QuestionWriter("Xml read");
-
-            var fileteredWorkers = WorkerFilter.Filter(workers);
-            fileteredWorkers.QuestionWriter("Attribute & Filter workers.");
-
             LinqQueries(workers);
         }
 
@@ -88,8 +50,12 @@ namespace MintaZh_1
             //-Hányan értenek a Javahoz? 
 
             var q2 = from worker in workers
-                     where worker.Stacks.Count(x => x.Equals("Java", StringComparison.InvariantCultureIgnoreCase)) > 0
-                     select worker;
+                     where worker.Stacks.Any(x => x.Equals("Java", StringComparison.InvariantCultureIgnoreCase))
+                     select new
+                     {
+                         worker.Name,
+                         worker.Stacks
+                     };
 
             new List<int> { q2.Count() }.QuestionWriter("Q2, Hányan értenek a Javahoz?");
 
@@ -105,11 +71,17 @@ namespace MintaZh_1
 
             new List<string> { q3.First(x => x.Active == true).AvgSalary.ToString("N2") }.QuestionWriter("Q3, //-Mennyi az átlag fizetése az aktív dolgozóknak?");
 
+            //-Ki rendelkezik a legnagyobb technológiai stackkel?
+
             var q4 = from worker in workers
                      orderby worker.Stacks.Count descending
-                     select worker;
+                     select new
+                     {
+                         worker.Name,
+                         StackCount = worker.Stacks.Count
+                     };
 
-            q4.Take(1).QuestionWriter("Q4, Mennyi az átlag fizetése az aktív dolgozóknak?");
+            q4.Take(1).QuestionWriter("Q4, -Ki rendelkezik a legnagyobb technológiai stackkel?");
 
             //-Mennyi az átlag fizu pozicióként?
             var q5 = from worker in workers
