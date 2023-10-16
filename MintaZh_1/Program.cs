@@ -8,7 +8,6 @@ namespace MintaZh_1
 {
     internal static class Program
     {
-#error Optional
         /// <summary>
         /// Pretty console writer for <see cref="IQueryable{T}"/> implementations.
         /// </summary>
@@ -20,7 +19,6 @@ namespace MintaZh_1
             anwsers.ToList().QuestionWriter(questionName);
         }
 
-#error Optional
         /// <summary>
         /// Pretty console writer for <see cref="IEnumerable{T}"/> implementations.
         /// </summary>
@@ -105,11 +103,13 @@ namespace MintaZh_1
 
             new List<string> { q3.First(x => x.Active == true).AvgSalary.ToString("N2") }.QuestionWriter("Q3, //-Mennyi az átlag fizetése az aktív dolgozóknak?");
 
+            //-Ki rendelkezik a legnagyobb technológiai stackkel?
+
             var q4 = from worker in workers
                      orderby worker.Stacks.Count descending
                      select worker;
 
-            q4.Take(1).QuestionWriter("Q4, Mennyi az átlag fizetése az aktív dolgozóknak?");
+            q4.Take(1).QuestionWriter("Q4, Ki rendelkezik a legnagyobb technológiai stackkel?");
 
             //-Mennyi az átlag fizu pozicióként?
             var q5 = from worker in workers

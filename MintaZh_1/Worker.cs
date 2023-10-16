@@ -120,7 +120,6 @@ namespace MintaZh_1
             return stacks.Select(x => x.Value).ToList();
         }
 
-#error Optional
         public override string ToString()
         {
             var sb = new StringBuilder();
