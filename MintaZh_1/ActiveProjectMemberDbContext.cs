@@ -19,7 +19,7 @@ namespace MintaZh_1
             if (!optionsBuilder.IsConfigured)
             {
                 //var connStr = @"Data Source=(LocalDB)\MSSQLLocalDB;" +
-                //    @"AttachDbFilename=C:\Users\hoffm\source\repos\MintaZh_1\MintaZh_1\ActiveProjectMember.mdf;" +
+                //    @"AttachDbFilename=|DataDirectory|\ActiveProjectMember.mdf;" +
                 //    @"Integrated Security=True";
 
                 optionsBuilder

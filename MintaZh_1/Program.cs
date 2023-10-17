@@ -97,8 +97,9 @@ namespace MintaZh_1
 
             //Válasszuk ki azokat a .Net fejleszőket akik vagy medior vagy senior szinten vannak.
             var q6 = from worker in workers
-                     where worker.Position.Equals("medior", StringComparison.InvariantCultureIgnoreCase)
-                        || worker.Position.Equals("senior", StringComparison.InvariantCultureIgnoreCase)
+                     where worker.Stacks.Contains(".Net") &&
+                     (worker.Position.Equals("medior", StringComparison.InvariantCultureIgnoreCase)
+                        || worker.Position.Equals("senior", StringComparison.InvariantCultureIgnoreCase))
                      select new ActiveProjectMember
                      {
                          Name = worker.Name,
@@ -109,6 +110,11 @@ namespace MintaZh_1
             q6.QuestionWriter("Q6, Válasszuk ki azokat a .Net fejleszőket akik vagy medior vagy senior szinten vannak.");
 
             UploadToDb(q6);
+        }
+
+        private static void DbWriter(this IEnumerable<ActiveProjectMember> data)
+        {
+            data.QuestionWriter("Database data is the following");
         }
 
         /// <summary>
@@ -129,7 +135,7 @@ namespace MintaZh_1
             var dbData = from members in dbContext.Members
                          select members;
 
-            dbData.QuestionWriter("Database data is the following");
+            dbData.DbWriter();
         }
     }
 }
